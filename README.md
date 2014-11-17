@@ -21,19 +21,24 @@ Or browse the [source code of the sample application][3] for a complete example 
 Including in your project
 -------------------------
 
-The library is pushed to Maven Central as a AAR, so you just need to add the following dependency to your `build.gradle`.
+The library is pushed to [SpotHopper, LLC's GitHub Maven repo][21] as an AAR, so you need to add the following dependency to your `build.gradle`.
     
+    repositories {
+        mavenCentral()
+        maven { url "https://raw.github.com/SpotHopperLLC/maven/master" }
+    }
+
     dependencies {
-        compile 'com.github.manuelpeinado.fadingactionbar:fadingactionbar:3.1.2'
+        compile 'com.github.spothopperllc.fadingactionbar:library:3.1.2'
     }
     
 If your project doesn't use the stock action bar, but one of the compatibility implementations, you would use the following:
 
     dependencies {
         // Use the following if your project uses ActionBarCompat
-        compile 'com.github.manuelpeinado.fadingactionbar:fadingactionbar-abc:3.1.2'
+        compile 'com.github.spothopperllc.fadingactionbar:appcompat:3.1.2'
         // Or the following if your project uses ActionBarSherlock
-        compile 'com.github.manuelpeinado.fadingactionbar:fadingactionbar-abs:3.1.2'
+        compile 'com.github.spothopperllc.fadingactionbar:actionbarsherlock:3.1.2'
     }
 
 
@@ -78,10 +83,8 @@ Who's using it
 * [Lffl Feed Reader][19]. Lffl feed reader is a free app that allows you to stay up to date on the latest news of your favorite linux blogs using a modern and minimal interface.
 * [Club Douala Ravensburg][20]. This app gives you access to the program of the Club Douala Ravensburg (Germany).
 
-*Does your app use FadingActionBar? If you want to be featured on this list drop me a line.*
 
-
-Developed By
+Originally Developed By
 --------------------
 
 Manuel Peinado Gallego - <manuel.peinado@gmail.com>
@@ -103,6 +106,7 @@ License
 -----------
 
     Copyright 2013,2014 Manuel Peinado
+    Copyright 2014 SpotHopper, LLC
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -120,12 +124,12 @@ License
 
 
  [1]: http://cyrilmottier.com/2013/05/24/pushing-the-actionbar-to-the-next-level/
- [2]: https://raw.github.com/ManuelPeinado/FadingActionBar/master/art/readme_pic.png
- [3]: https://github.com/ManuelPeinado/FadingActionBar/tree/master/samples-stock
- [4]: https://github.com/ManuelPeinado/FadingActionBar/blob/master/samples-stock/src/com/manuelpeinado/fadingactionbar/demo/ScrollViewActivity.java
- [5]: https://github.com/ManuelPeinado/FadingActionBar/blob/master/samples-stock/src/com/manuelpeinado/fadingactionbar/demo/ListViewActivity.java
- [6]: https://github.com/ManuelPeinado/FadingActionBar/blob/master/samples-stock/src/com/manuelpeinado/fadingactionbar/demo/WebViewActivity.java
- [7]: https://github.com/ManuelPeinado/FadingActionBar/blob/master/samples-stock/src/com/manuelpeinado/fadingactionbar/demo/SampleFragment.java
+ [2]: https://raw.github.com/SpotHopperLLC/FadingActionBar/master/art/readme_pic.png
+ [3]: https://github.com/SpotHopperLLC/FadingActionBar/tree/master/samples-stock
+ [4]: https://github.com/SpotHopperLLC/FadingActionBar/blob/master/samples-stock/src/com/manuelpeinado/fadingactionbar/demo/ScrollViewActivity.java
+ [5]: https://github.com/SpotHopperLLC/FadingActionBar/blob/master/samples-stock/src/com/manuelpeinado/fadingactionbar/demo/ListViewActivity.java
+ [6]: https://github.com/SpotHopperLLC/FadingActionBar/blob/master/samples-stock/src/com/manuelpeinado/fadingactionbar/demo/WebViewActivity.java
+ [7]: https://github.com/SpotHopperLLC/FadingActionBar/blob/master/samples-stock/src/com/manuelpeinado/fadingactionbar/demo/SampleFragment.java
  [8]: http://cyrilmottier.com
  [9]: https://github.com/antoniolg
  [10]: https://github.com/mozarcik/
@@ -139,3 +143,4 @@ License
  [18]: https://play.google.com/store/apps/details?id=ru.xlebstudio.nightmuseum
  [19]: https://play.google.com/store/apps/details?id=com.ivanenr.lfflfeedreader
  [20]: https://play.google.com/store/apps/details?id=com.mikebdev.douala
+ [21]: https://github.com/SpotHopperLLC/maven
