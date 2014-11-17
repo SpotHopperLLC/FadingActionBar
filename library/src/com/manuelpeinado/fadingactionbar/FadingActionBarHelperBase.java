@@ -21,8 +21,10 @@ import java.lang.reflect.Method;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.view.LayoutInflater;
@@ -37,6 +39,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.manuelpeinado.fadingactionbar.view.ObservableScrollView;
 import com.manuelpeinado.fadingactionbar.view.ObservableWebViewWithHeader;
@@ -51,12 +54,16 @@ public abstract class FadingActionBarHelperBase {
     private int mActionBarBackgroundResId;
     @LayoutRes
     private int mHeaderLayoutResId;
+    @ColorRes
+    private int mActionBarBackgroundColorResId;
     private View mHeaderView;
     @LayoutRes
     private int mHeaderOverlayLayoutResId;
     private View mHeaderOverlayView;
     @LayoutRes
     private int mContentLayoutResId;
+    @LayoutRes
+    private int mFooterLayoutResId;
     private View mContentView;
     private LayoutInflater mInflater;
     private boolean mLightActionBar;
@@ -67,10 +74,24 @@ public abstract class FadingActionBarHelperBase {
     private FrameLayout mMarginView;
     private View mListViewBackgroundView;
     private boolean mAllowHeaderTouchEvents = false;
+    private OnAlphaChangeListener mOnAlphaChangeListener;
+
+    public static interface OnAlphaChangeListener {
+        void onAlphaChanged(int alpha);
+    }
+
+    public void setOnAlphaChangeListener(OnAlphaChangeListener l) {
+        mOnAlphaChangeListener = l;
+    }
 
     public final <T extends FadingActionBarHelperBase> T actionBarBackground(@DrawableRes int drawableResId) {
         mActionBarBackgroundResId = drawableResId;
         return (T)this;
+    }
+
+    public final <T extends FadingActionBarHelperBase> T actionBarBackgroundColor(@ColorRes int colorResId) {
+        mActionBarBackgroundColorResId = colorResId;
+        return (T) this;
     }
 
     public final <T extends FadingActionBarHelperBase> T actionBarBackground(Drawable drawable) {
@@ -96,6 +117,11 @@ public abstract class FadingActionBarHelperBase {
     public final <T extends FadingActionBarHelperBase> T headerOverlayView(View view) {
         mHeaderOverlayView = view;
         return (T)this;
+    }
+
+    public final <T extends FadingActionBarHelperBase> T footerLayout(@LayoutRes int layoutResId) {
+        mFooterLayoutResId = layoutResId;
+        return (T) this;
     }
 
     public final <T extends FadingActionBarHelperBase> T contentLayout(@LayoutRes int layoutResId) {
@@ -181,7 +207,12 @@ public abstract class FadingActionBarHelperBase {
 
     public void initActionBar(Activity activity) {
         if (mActionBarBackgroundDrawable == null) {
-            mActionBarBackgroundDrawable = activity.getResources().getDrawable(mActionBarBackgroundResId);
+            if (mActionBarBackgroundColorResId != 0) {
+                int color = activity.getResources().getColor(mActionBarBackgroundColorResId);
+                mActionBarBackgroundDrawable = new ColorDrawable(color);
+            } else {
+                mActionBarBackgroundDrawable = activity.getResources().getDrawable(mActionBarBackgroundResId);
+            }
         }
         setActionBarBackgroundDrawable(mActionBarBackgroundDrawable);
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
@@ -249,6 +280,7 @@ public abstract class FadingActionBarHelperBase {
             setMarginViewTouchListener();
         }
 
+        attachFooterToRoot(webViewContainer);
         return webViewContainer;
     }
 
@@ -272,6 +304,7 @@ public abstract class FadingActionBarHelperBase {
             setMarginViewTouchListener();
         }
 
+        attachFooterToRoot(scrollViewContainer);
         return scrollViewContainer;
     }
 
@@ -295,7 +328,7 @@ public abstract class FadingActionBarHelperBase {
 
         // Make the background as high as the screen so that it fills regardless of the amount of scroll. 
         mListViewBackgroundView = contentContainer.findViewById(R.id.fab__listview_background);
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mListViewBackgroundView.getLayoutParams();
+        ViewGroup.LayoutParams params = mListViewBackgroundView.getLayoutParams();
         params.height = Utils.getDisplayHeight(listView.getContext());
         mListViewBackgroundView.setLayoutParams(params);
 
@@ -305,7 +338,16 @@ public abstract class FadingActionBarHelperBase {
             setMarginViewTouchListener();
         }
 
+        attachFooterToRoot(contentContainer);
         return contentContainer;
+    }
+
+    private void attachFooterToRoot(ViewGroup container) {
+        View footer = mInflater.inflate(mFooterLayoutResId, container, false);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        footer.setLayoutParams(params);
+        container.addView(footer);
     }
 
     private OnScrollListener mOnScrollListener = new OnScrollListener() {
@@ -341,6 +383,9 @@ public abstract class FadingActionBarHelperBase {
         float ratio = (float) Math.min(Math.max(scrollPosition, 0), headerHeight) / headerHeight;
         int newAlpha = (int) (ratio * 255);
         mActionBarBackgroundDrawable.setAlpha(newAlpha);
+        if (mOnAlphaChangeListener != null) {
+            mOnAlphaChangeListener.onAlphaChanged(newAlpha);
+        }
 
         addParallaxEffect(scrollPosition);
     }
@@ -363,11 +408,11 @@ public abstract class FadingActionBarHelperBase {
     }
 
     private void updateHeaderHeight(int headerHeight) {
-        ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) mMarginView.getLayoutParams();
+        ViewGroup.LayoutParams params = mMarginView.getLayoutParams();
         params.height = headerHeight;
         mMarginView.setLayoutParams(params);
         if (mListViewBackgroundView != null) {
-            FrameLayout.LayoutParams params2 = (FrameLayout.LayoutParams) mListViewBackgroundView.getLayoutParams();
+            RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) mListViewBackgroundView.getLayoutParams();
             params2.topMargin = headerHeight;
             mListViewBackgroundView.setLayoutParams(params2);
         }
