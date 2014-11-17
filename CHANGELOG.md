@@ -1,6 +1,13 @@
 Change Log
 =======================================
 
+Version 3.1.2 (SH) *(2014-11-17)*
+----------------------------
+ * Fix to make the header clickable
+ * Ability to add a footer
+ * Annotations from the support library for resource identifiers
+ * Updated build files
+
 Version 3.1.2 *(2014-03-12)*
 ----------------------------
  * Fill available space when content too small. Prompted by this [SO question](http://stackoverflow.com/questions/22332696/fadingactionbar-linearlayout-does-not-match-parent).
