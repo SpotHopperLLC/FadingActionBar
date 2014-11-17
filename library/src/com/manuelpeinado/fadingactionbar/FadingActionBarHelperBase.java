@@ -23,6 +23,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.LayoutRes;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -45,11 +47,15 @@ public abstract class FadingActionBarHelperBase {
     protected static final String TAG = "FadingActionBarHelper";
     private Drawable mActionBarBackgroundDrawable;
     private FrameLayout mHeaderContainer;
+    @DrawableRes
     private int mActionBarBackgroundResId;
+    @LayoutRes
     private int mHeaderLayoutResId;
     private View mHeaderView;
+    @LayoutRes
     private int mHeaderOverlayLayoutResId;
     private View mHeaderOverlayView;
+    @LayoutRes
     private int mContentLayoutResId;
     private View mContentView;
     private LayoutInflater mInflater;
@@ -62,7 +68,7 @@ public abstract class FadingActionBarHelperBase {
     private View mListViewBackgroundView;
     private boolean mAllowHeaderTouchEvents = false;
 
-    public final <T extends FadingActionBarHelperBase> T actionBarBackground(int drawableResId) {
+    public final <T extends FadingActionBarHelperBase> T actionBarBackground(@DrawableRes int drawableResId) {
         mActionBarBackgroundResId = drawableResId;
         return (T)this;
     }
@@ -72,7 +78,7 @@ public abstract class FadingActionBarHelperBase {
         return (T)this;
     }
 
-    public final <T extends FadingActionBarHelperBase> T headerLayout(int layoutResId) {
+    public final <T extends FadingActionBarHelperBase> T headerLayout(@LayoutRes int layoutResId) {
         mHeaderLayoutResId = layoutResId;
         return (T)this;
     }
@@ -82,7 +88,7 @@ public abstract class FadingActionBarHelperBase {
         return (T)this;
     }
 
-    public final <T extends FadingActionBarHelperBase> T headerOverlayLayout(int layoutResId) {
+    public final <T extends FadingActionBarHelperBase> T headerOverlayLayout(@LayoutRes int layoutResId) {
         mHeaderOverlayLayoutResId = layoutResId;
         return (T)this;
     }
@@ -92,7 +98,7 @@ public abstract class FadingActionBarHelperBase {
         return (T)this;
     }
 
-    public final <T extends FadingActionBarHelperBase> T contentLayout(int layoutResId) {
+    public final <T extends FadingActionBarHelperBase> T contentLayout(@LayoutRes int layoutResId) {
         mContentLayoutResId = layoutResId;
         return (T)this;
     }
